@@ -325,11 +325,43 @@ int main(int argc, char **argv) {
 		}
 	} while (runProgram);
 	*/
+	/*
 	char *query;
 	query = read("INSERT 11 22 33");
 	printf("%s\n", query);
 	execute(query);
 	mysql_close(conn);
 	return 0;
-	
+	*/
+	    
+	    /*
+		char *pubkey = "8839d4bb37d2f378c1d2d388c5d001d7";
+		char *prvkey = "441cea5d9be979bba4ba3cd7079b9470";
+
+		paillier_pubkey_t *publicKey = paillier_pubkey_from_hex(pubkey);
+		paillier_prvkey_t *privateKey = paillier_prvkey_from_hex(prvkey, publicKey);
+		*/
+	    
+		bool blnContinue = true;
+		printf("Enter 'exit' or 'quit' to exit.\n\n");
+
+		do {
+			char command[256];
+			char *query;
+
+			printf("Enter query/command:\n> ");
+			fgets(command, 256, stdin);
+
+			if (strncmp(command, "exit", 4) == 0 || strncmp(command, "quit", 4) == 0) {
+				blnContinue = false;
+				printf("\n");
+			} else {
+	            query = read(command);//, publicKey, privateKey);
+				printf("%s\n\n", query);
+	            execute(query);//, publicKey, privateKey);
+			}
+		} while (blnContinue);
+
+		mysql_close(conn);
+		return 0;
 }

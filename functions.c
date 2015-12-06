@@ -79,7 +79,6 @@ void connection() {
 }
 
 char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
-	printf("11111");
 	char *tokens[32];
 	int i = 0;
 	char* token = (char*)malloc(20*sizeof(char));
@@ -93,12 +92,12 @@ char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 	token = strtok(input, " ");
 	l = strlen(token);
 	
-	printf("22222");
 	
 	tokens[i] = (char*)malloc(l*sizeof(char));
 	strcpy(tokens[i], token);
 	i++;
 	if(strcmp(tokens[0], "INSERT") == 0 || strcmp(tokens[0], "insert") == 0) {
+		printf("4444");
 		token = strtok(NULL, " ");
 		while(token != NULL) {
 			l = strlen(token);
@@ -108,11 +107,12 @@ char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 			i++;
 			token = strtok(NULL, " ");
 		}
-		if((i-1) != 4) {
+		if(i!= 4) {
 			strcpy(query, "Invalid query");
 		}
 		else {
 			//char *enc = encryption(pub, tokens[3]);
+			printf("6666\n");
 			strcpy(query, "INSERT INTO Employees VALUES(");
 			strcat(query, tokens[1]); // insert id
 			strcat(query, ", ");
@@ -161,6 +161,7 @@ char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 					having_i = i;
 				}				
 				i++;
+				token = strtok(NULL, " ");
 			}
 			if(groupby)
 				strcat(query, " age,");
@@ -176,18 +177,18 @@ char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 				if(groupby)
 					end = groupby_i;
 				else
-					end = i - 1;
+					end = i;
 				int j;
 				for(j = start; j < end; j++) {
 					strcat(query, " ");
-					strcat(query, "tokens[j]");
+					strcat(query, tokens[j]);
 				}
 			}
 			if(groupby)
 				strcat(query, " GROUP BY age");
 			if(having) {
 				strcat(query, " HAVING");
-				int start = having_i + 1, end = i - 1;
+				int start = having_i + 1, end = i;
 				int j;
 				for(j = start; j < end; j++) {
 					strcat(query, " ");
@@ -207,7 +208,7 @@ char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 }
 
 void execute(char* query){//, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
-	if(strcmp(query, "Invalid query")){
+	if(strcmp(query, "Invalid query") == 0){
 		printf("Invalid query. \n");
 	}
 	else if (strncmp(query, "SELECT AVG", 10) == 0 || strncmp(query, "SELECT age, AVG", 15) == 0 ){
