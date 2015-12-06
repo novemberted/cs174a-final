@@ -3,7 +3,7 @@
 #include <string.h>
 #include <mysql.h>
 
-#include "paillier.c"
+#include "paillier.h"
 
 
 my_bool SUM_HE_init(UDF_INIT *initid, UDF_ARGS *args, char *message){

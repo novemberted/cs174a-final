@@ -1,13 +1,8 @@
-/*#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <mysql.h>
-#include <gmp.h>
+#include "functions.h"
 
-#include "cryption.h"
-
-
-MYSQL *conn;
+int get_int_length(unsigned long int value) {
+	return (value == 0 ? 1 : ((int)(log10(fabs(value)) + 1) + (value < 0 ? 1 : 0)));
+}
 
 char *replace_str(char *string, char *original, char *replacement) {
 	static char buffer[4096];
@@ -25,16 +20,41 @@ char *replace_str(char *string, char *original, char *replacement) {
 	return buffer;
 }
 
+/*
+char *encrytion(paillier_pubkey_t* pub, char *input){
+	unsigned long int u_input = strtoul(input, NULL, 10);
+	paillier_plaintext_t* plain = paillier_plaintext_from_ui(u_input);
+	paillier_ciphertext_t* cipher = paillier_enc(cipher, pub, plain, paillier_get_rand_devurandom);
+	char* output = mpz_get_str(NULL, 16, cipher->c);
+	
+	return output;
+	
+}
+
+char *decryption(paillier_pubkey_t* pub, paillier_prvkey_t* prv, char *input){
+	paillier_ciphertext_t* cipher = (paillier_ciphertext_t*)malloc(sizeof(paillier_ciphertext_t));
+	
+	mpz_init_set_str(cipher->c, input, 16);
+	paillier_plaintext_t* plain = paillier_dec(plain, pub, prv, cipher);
+	unsigned long int u_plain = mpz_get_ui(plain->m);
+	
+	int length = get_int_length(u_plain);
+	char* output = (char *)malloc(length * sizeof(char));
+	sprintf(output, "%lu", u_plain);
+	
+	return output;
+}
+*/
 void connection() {
    //MYSQL *conn;
    MYSQL_RES *res;
    MYSQL_ROW row;
    char *server = "localhost";
    char *user = "root";
-   char *password = "";//"cs174$"; 
+   char *password = "";//"cs174$"; /* set me first */
    char *database = "project";
    conn = mysql_init(NULL);
-   // Connect to database 
+   /* Connect to database */
    if (!mysql_real_connect(conn, server,
          user, password, database, 0, NULL, 0)) {
       fprintf(stderr, "%s\n", mysql_error(conn));
@@ -44,19 +64,17 @@ void connection() {
 	  fprintf(stderr, "%s\n", mysql_error(conn));
    }
 
-   // send SQL query 
+   /* send SQL query */
    if (mysql_query(conn, "show tables")) {
       fprintf(stderr, "%s\n", mysql_error(conn));
       exit(1);
    }
    res = mysql_use_result(conn);
-   // output table name 
+   /* output table name */
    printf("MySQL Tables in mysql database:\n");
    while ((row = mysql_fetch_row(res)) != NULL)
       printf("%s \n", row[0]);
-   // close connection
    mysql_free_result(res);
-   mysql_close(conn);
 }
 
 char* read(char *input ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
@@ -199,7 +217,7 @@ void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 			sum_res = mysql_store_result(conn);
 			
 			if(sum_res == NULL){
-				fprint(stderr, "MySQL error: there's no employees in this query. \n");
+				fprintf(stderr, "MySQL error: there's no employees in this query. \n");
 				return;
 			}
 		}
@@ -233,9 +251,9 @@ void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 			while((sum_rows = mysql_fetch_row(sum_res)) && (count_rows = mysql_fetch_row(count_res))) {
 				for(j = 0; j < sum_fields; j++) {
 					if(j == sum_fields - 1) {
-						double sum = atof(decryption(pub, prv, sum_rows[j]));
-						double count = atof(count_rows[j]);
-						double average = sum / count;
+						//double sum = atof(decryption(pub, prv, sum_rows[j]));
+						//double count = atof(count_rows[j]);
+						double average = 0;//sum / count;
 						printf("%10.2f", average);
 					}
 					else {
@@ -268,7 +286,7 @@ void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 				int j;
 				f = mysql_fetch_fields(res);
 				for(j = 0; j < res_fields; j++) {
-					if(stcmp(f[j].name, "SUM_HE(salary)") == 0)
+					if(strcmp(f[j].name, "SUM_HE(salary)") == 0)
 						printf("%10s", "sum");
 					else
 						printf("%10s", f[j].name);
@@ -277,7 +295,8 @@ void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 				while((r = mysql_fetch_row(res))) {
 					for(j = 0; j < res_fields; j++) {
 						if(j == res_fields - 1) {
-							char *sum = decryption(pub, prv, r[j]);
+							//char *sum = decryption(pub, prv, r[j]);
+							int sum = 0;
 							printf("%10s", sum);
 						}
 						else
@@ -292,29 +311,4 @@ void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 	}
 }
 
-*/
-#include "functions.h"
 
-
-
-int main(int argc, char **argv) {
-	connection();
-	printf("Enter 'exit' to quit\n");
-	int run = 1;
-	do {
-		char input[200];
-		char *query;
-		
-		printf("enter in you dare \n");
-		fgets(input, 200, stdin);
-		if(strcmp(input, "exit") == 0)
-			run = 0;
-		query = read(input, 0, 0);
-		printf("%s\n", query);
-		execute(query,0, 0);
-		
-	}while (run);
-	mysql_close(conn);
-	return 0;
-	
-}

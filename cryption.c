@@ -1,8 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <mysql.h>
-
 #include "cryption.h"
 
 char *encrytion(paillier_pubkey_t* pub, char *input){
