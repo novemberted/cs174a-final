@@ -415,6 +415,7 @@ paillier_create_enc_zero()
 	return ct;
 }
 
+
 int main (){
 	paillier_pubkey_t* pub;
 	paillier_prvkey_t* prv;
