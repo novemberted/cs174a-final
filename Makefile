@@ -2,7 +2,7 @@ CC			= gcc
 Executable	= project3
 Libraries	= -L/usr/local/lib/ -L/usr/local/mysql/ -lgmp -lmysqlclient -lz -lm
 Flags		= -c -Wall -I/usr/local/mysql/include/ -I/usr/include/mysql/
-Sources		= main.c functions.c
+Sources		= main.c functions.c paillier.c
 Objects		= $(Sources:.c=.o)
 
 $(Executable): $(Objects)

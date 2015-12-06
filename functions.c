@@ -20,7 +20,7 @@ char *replace_str(char *string, char *original, char *replacement) {
 	return buffer;
 }
 
-/*
+
 char *encrytion(paillier_pubkey_t* pub, char *input){
 	unsigned long int u_input = strtoul(input, NULL, 10);
 	paillier_plaintext_t* plain = paillier_plaintext_from_ui(u_input);
@@ -44,7 +44,7 @@ char *decryption(paillier_pubkey_t* pub, paillier_prvkey_t* prv, char *input){
 	
 	return output;
 }
-*/
+
 void connection() {
    //MYSQL *conn;
    MYSQL_RES *res;
@@ -181,7 +181,7 @@ char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 				int j;
 				for(j = start; j < end; j++) {
 					strcat(query, " ");
-					strcat(query, "tokens[j]");
+					strcat(query, tokens[j]);
 				}
 			}
 			if(groupby)
