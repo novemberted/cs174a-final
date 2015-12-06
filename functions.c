@@ -75,36 +75,38 @@ void connection() {
    while ((row = mysql_fetch_row(res)) != NULL)
       printf("%s \n", row[0]);
    mysql_free_result(res);
+	printf("database connect success");
 }
 
-char* read(char *input ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
-	char *tokens[50];
+char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
+	printf("11111");
+	char *tokens[32];
 	int i = 0;
-	
+	char* token = (char*)malloc(20*sizeof(char));
 	int l = strlen(input);
-	input[l-1] = "\0";
+	input[l-1] = '\0';
 	char *query = (char*)malloc(512*sizeof(char));
-	
 	if(strcmp(input, "") == 0) {
 		fprintf(stderr, "%s\n", "No query entered.");
 		strcpy(query, "Invalid query");
-	}
-	
-	char token  = strtok(input, " ");
+	}else{
+	token = strtok(input, " ");
 	l = strlen(token);
+	
+	printf("22222");
 	
 	tokens[i] = (char*)malloc(l*sizeof(char));
 	strcpy(tokens[i], token);
 	i++;
-	if(strcmp(token, "INSERT") == 0 || strcmp(token, "insert") == 0) {
-		token = strtok(input, " ");
+	if(strcmp(tokens[0], "INSERT") == 0 || strcmp(tokens[0], "insert") == 0) {
+		token = strtok(NULL, " ");
 		while(token != NULL) {
 			l = strlen(token);
 			tokens[i] = (char*)malloc(l*sizeof(char));
 			strcpy(tokens[i], token);
 			
 			i++;
-			token = strtok(input, " ");
+			token = strtok(NULL, " ");
 		}
 		if((i-1) != 4) {
 			strcpy(query, "Invalid query");
@@ -121,18 +123,18 @@ char* read(char *input ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 			strcat(query, "');");
 		}
 	}
-	else if(strcmp(token, "SELECT") == 0 || strcmp(token, "select") == 0) {
-		token = strtok(input, " ");
+	else if(strcmp(tokens[0], "SELECT") == 0 || strcmp(tokens[0], "select") == 0) {
+		token = strtok(NULL, " ");
 		if(token != NULL) {
 			l = strlen(token);
 			tokens[i] = (char*)malloc(l*sizeof(char));
 			strcpy(tokens[i], token);
 			i++;
 		}
-		if(strcmp(token, "*") == 0) {
+		if(strcmp(tokens[1], "*") == 0) {
 			strcpy(query, "SELECT id, age, salary FROM Employees;");
 		}
-		else if(strcmp(token, "SUM") == 0 || strcmp(token, "sum") == 0 || strcmp(token, "AVG") == 0 || strcmp(token, "avg") == 0) {
+		else if(strcmp(tokens[1], "SUM") == 0 || strcmp(tokens[1], "sum") == 0 || strcmp(tokens[1], "AVG") == 0 || strcmp(tokens[1], "avg") == 0) {
 			strcpy(query, "SELECT");
 			int wherebool = 0; // bool if there is a where condition
 			int groupby = 0; // bool for group by condition
@@ -140,7 +142,7 @@ char* read(char *input ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 			int where_i;
 			int groupby_i;
 			int having_i;
-			token = strtok(input, " ");
+			token = strtok(NULL, " ");
 			while(token != NULL) {
 				l = strlen(token);
 				tokens[i] = (char*)malloc(l*sizeof(char));
@@ -182,7 +184,7 @@ char* read(char *input ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 				}
 			}
 			if(groupby)
-				strcat(query, "GROUP BY age");
+				strcat(query, " GROUP BY age");
 			if(having) {
 				strcat(query, " HAVING");
 				int start = having_i + 1, end = i - 1;
@@ -193,17 +195,18 @@ char* read(char *input ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 				}
 			}
 		}
-		else if (token != NULL) {
+		else if (tokens[1] != NULL) {
 			strcpy(query, "SELECT id, age, salary FROM Employees WHERE id = ");
 			strcat(query, token);
 		}
 		else
 			strcpy(query, "Invalid query");
 	}
+	}
 	return query;
 }
 
-void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
+void execute(char* query){//, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 	if(strcmp(query, "Invalid query")){
 		printf("Invalid query. \n");
 	}
@@ -297,7 +300,7 @@ void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 						if(j == res_fields - 1) {
 							//char *sum = decryption(pub, prv, r[j]);
 							int sum = 0;
-							printf("%10s", sum);
+							printf("%10d", sum);
 						}
 						else
 							printf("%10s", r[j]);
