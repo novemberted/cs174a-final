@@ -181,7 +181,7 @@ char *read(char *input){// ,paillier_pubkey_t* pub, paillier_prvkey_t* prv){
 				int j;
 				for(j = start; j < end; j++) {
 					strcat(query, " ");
-					strcat(query, "tokens[j]");
+					strcat(query, tokens[j]);
 				}
 			}
 			if(groupby)
