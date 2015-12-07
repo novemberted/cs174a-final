@@ -48,7 +48,7 @@ void connection() {
    //MYSQL *conn;
    MYSQL_RES *res;
    MYSQL_ROW row;
-   char *server = "56.67.32.26";
+   char *server = "56.67.32.26:3306";
    char *user = "root";
    char *password = "cs174$"; /* set me first */
    char *database = "project";

@@ -13,4 +13,8 @@ int main (){
   printf("%s, %s, \n", paillier_pubkey_to_hex(pub), paillier_prvkey_to_hex(prv));
   
   
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4429fc15ab57c45cdfa7e4fb3077d26e2acb092e

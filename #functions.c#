@@ -48,7 +48,7 @@ void connection() {
    //MYSQL *conn;
    MYSQL_RES *res;
    MYSQL_ROW row;
-   char *server = "56.67.32.26";
+   char *server = "54.67.32.26";
    char *user = "root";
    char *password = "cs174$"; /* set me first */
    char *database = "project";
@@ -254,9 +254,7 @@ void execute(char* query, paillier_pubkey_t *pub, paillier_prvkey_t *prv){
 				for(j = 0; j < sum_fields; j++) {
 					if(j == sum_fields - 1) {
 						double sum = atof(decryption(pub, prv, sum_rows[j]));
-						printf("%f\n", sum);
-						double count = strlen(count_rows)-1;
-						printf("%f\n", count);
+						double count = atof(count_rows[j]);
 						double average = sum / count;
 						printf("%10.2f", average);
 					}

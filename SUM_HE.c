@@ -38,7 +38,7 @@ void SUM_HE_clear(UDF_INIT *initid, char *is_null, char *error){
 }
 
 void SUM_HE_add(UDF_INIT *initid, UDF_ARGS *args, char *is_null, char *error){
-   	char *pub = "";
+   	char *pub = "815eeb1fa402ba1538c3b1a3dc1a5d75";
 	paillier_pubkey_t* pubkey = paillier_pubkey_from_hex(pub);
 	paillier_ciphertext_t* temp1 = (paillier_ciphertext_t*)initid->ptr;
 	
