@@ -1,5 +1,5 @@
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#ifndef HELPERMETHODS_H
+#define HELPERMETHODS_H
 
 #include <stdlib.h>
 #include <stdio.h>
